@@ -1,0 +1,1415 @@
+ERROR DESCRIPTION:
+-balls either aren't truly despawning or creating duplicates of itself
+-seems to be in exponential growth of n = n^2 entities*
+-eventually if enough games are played, the FPS drops rapidly
+
+
+cargo run
+   Compiling pong v0.1.0 (/Users/ethanwater/Documents/GitHub/pong/pong)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.84s
+     Running `target/debug/pong`
+2023-03-04T20:36:01.332131Z  INFO bevy_render::renderer: AdapterInfo { name: "Apple M1", vendor: 0, device: 0, device_type: IntegratedGpu, driver: "", driver_info: "", backend: Metal }
+0.75
+0.75
+1
+1.25
+1.5
+1.75
+2
+2.25
+2.5
+2.75
+3
+3.25
+3.5
+3.75
+4
+4.25
+4.5
+4.75
+5
+5.25
+5.5
+5.75
+6
+2023-03-04T20:36:10.329124Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 6v0 because it doesn't exist in this World.
+0.75
+0.75
+1
+1
+1.25
+1.25
+1.5
+1.5
+1.75
+1.75
+2
+2
+2.25
+2.25
+2.5
+2.5
+2.75
+2.75
+3
+3
+3.25
+3.25
+3.5
+3.5
+3.75
+3.75
+4
+4
+4.25
+4.25
+0.75
+0.75
+1
+1
+1.25
+1.25
+1.5
+1.5
+2023-03-04T20:36:22.412443Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 6v1 because it doesn't exist in this World.
+2023-03-04T20:36:22.412530Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 8v0 because it doesn't exist in this World.
+0.75
+0.75
+0.75
+0.75
+1
+1
+1
+1
+1.25
+1.25
+1.25
+1.25
+1.5
+1.5
+1.5
+1.5
+1.75
+1.75
+1.75
+1.75
+2
+2
+2
+2
+2.25
+2.25
+2.25
+2.25
+2.5
+2.5
+2.5
+2.5
+2.75
+2.75
+2.75
+2.75
+3
+3
+3
+3
+3.25
+3.25
+3.25
+3.25
+3.5
+3.5
+3.5
+3.5
+3.75
+3.75
+3.75
+3.75
+4
+4
+4
+4
+4.25
+4.25
+4.25
+4.25
+4.5
+4.5
+4.5
+4.5
+4.75
+4.75
+4.75
+4.75
+5
+5
+5
+5
+5.25
+5.25
+5.25
+5.25
+5.5
+5.5
+5.5
+5.5
+5.75
+5.75
+5.75
+5.75
+6
+6
+6
+6
+6.25
+6.25
+6.25
+6.25
+6.5
+6.5
+6.5
+6.5
+6.75
+6.75
+6.75
+6.75
+7
+7
+7
+7
+7.25
+7.25
+7.25
+7.25
+7.5
+7.5
+7.5
+7.5
+7.75
+7.75
+7.75
+7.75
+8
+8
+8
+8
+2023-03-04T20:36:27.662524Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 7v1 because it doesn't exist in this World.
+2023-03-04T20:36:27.662624Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 5v2 because it doesn't exist in this World.
+2023-03-04T20:36:27.662684Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 9v0 because it doesn't exist in this World.
+2023-03-04T20:36:27.662739Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 10v0 because it doesn't exist in this World.
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+1
+1
+1
+1
+1
+1
+1
+1
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+2
+2
+2
+2
+2
+2
+2
+2
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+3
+3
+3
+3
+3
+3
+3
+3
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+4
+4
+4
+4
+4
+4
+4
+4
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+1
+1
+1
+1
+1
+1
+1
+1
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+2
+2
+2
+2
+2
+2
+2
+2
+2023-03-04T20:36:47.579341Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 8v2 because it doesn't exist in this World.
+2023-03-04T20:36:47.579442Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 16v1 because it doesn't exist in this World.
+2023-03-04T20:36:47.579501Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 15v1 because it doesn't exist in this World.
+2023-03-04T20:36:47.579557Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 14v1 because it doesn't exist in this World.
+2023-03-04T20:36:47.579611Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 13v1 because it doesn't exist in this World.
+2023-03-04T20:36:47.579666Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 12v1 because it doesn't exist in this World.
+2023-03-04T20:36:47.579721Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 6v3 because it doesn't exist in this World.
+2023-03-04T20:36:47.579773Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 11v1 because it doesn't exist in this World.
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.25
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.5
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.5
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+3.75
+4
+4
+4
+4
+4
+4
+4
+4
+4
+4
+4
+4
+4
+4
+4
+4
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.25
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.5
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+4.75
+5
+5
+5
+5
+5
+5
+5
+5
+5
+5
+5
+5
+5
+5
+5
+5
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.25
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.5
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+5.75
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+6.25
+2023-03-04T20:36:53.863053Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 10v2 because it doesn't exist in this World.
+2023-03-04T20:36:53.863153Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 20v1 because it doesn't exist in this World.
+2023-03-04T20:36:53.863213Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 18v1 because it doesn't exist in this World.
+2023-03-04T20:36:53.863269Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 17v1 because it doesn't exist in this World.
+2023-03-04T20:36:53.863323Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 7v3 because it doesn't exist in this World.
+2023-03-04T20:36:53.863376Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 5v4 because it doesn't exist in this World.
+2023-03-04T20:36:53.863431Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 9v2 because it doesn't exist in this World.
+2023-03-04T20:36:53.863485Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 19v1 because it doesn't exist in this World.
+2023-03-04T20:36:53.863539Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 21v0 because it doesn't exist in this World.
+2023-03-04T20:36:53.863592Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 22v0 because it doesn't exist in this World.
+2023-03-04T20:36:53.863645Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 23v0 because it doesn't exist in this World.
+2023-03-04T20:36:53.863698Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 24v0 because it doesn't exist in this World.
+2023-03-04T20:36:53.863750Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 25v0 because it doesn't exist in this World.
+2023-03-04T20:36:53.863803Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 26v0 because it doesn't exist in this World.
+2023-03-04T20:36:53.863856Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 27v0 because it doesn't exist in this World.
+2023-03-04T20:36:53.863910Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 28v0 because it doesn't exist in this World.
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.25
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.5
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+1.75
+2023-03-04T20:36:56.714173Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 35v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.714264Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 11v2 because it doesn't exist in this World.
+2023-03-04T20:36:56.714313Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 6v4 because it doesn't exist in this World.
+2023-03-04T20:36:56.714361Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 12v2 because it doesn't exist in this World.
+2023-03-04T20:36:56.714407Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 13v2 because it doesn't exist in this World.
+2023-03-04T20:36:56.714453Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 14v2 because it doesn't exist in this World.
+2023-03-04T20:36:56.714503Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 15v2 because it doesn't exist in this World.
+2023-03-04T20:36:56.714550Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 16v2 because it doesn't exist in this World.
+2023-03-04T20:36:56.714595Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 8v3 because it doesn't exist in this World.
+2023-03-04T20:36:56.714641Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 29v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.714686Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 30v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.714731Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 31v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.714776Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 32v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.714821Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 33v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.714867Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 34v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.714912Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 36v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.714957Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 37v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715003Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 38v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715049Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 39v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715096Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 40v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715141Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 41v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715186Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 42v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715232Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 43v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715277Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 44v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715322Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 45v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715368Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 46v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715413Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 47v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715459Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 48v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715505Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 49v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715551Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 50v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715597Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 51v0 because it doesn't exist in this World.
+2023-03-04T20:36:56.715642Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 52v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.898587Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 67v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.898687Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 28v1 because it doesn't exist in this World.
+2023-03-04T20:36:57.898737Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 27v1 because it doesn't exist in this World.
+2023-03-04T20:36:57.898784Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 26v1 because it doesn't exist in this World.
+2023-03-04T20:36:57.898831Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 25v1 because it doesn't exist in this World.
+2023-03-04T20:36:57.898878Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 24v1 because it doesn't exist in this World.
+2023-03-04T20:36:57.898924Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 23v1 because it doesn't exist in this World.
+2023-03-04T20:36:57.898970Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 22v1 because it doesn't exist in this World.
+2023-03-04T20:36:57.899014Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 21v1 because it doesn't exist in this World.
+2023-03-04T20:36:57.899060Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 19v2 because it doesn't exist in this World.
+2023-03-04T20:36:57.899105Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 9v3 because it doesn't exist in this World.
+2023-03-04T20:36:57.899150Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 5v5 because it doesn't exist in this World.
+2023-03-04T20:36:57.899196Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 7v4 because it doesn't exist in this World.
+2023-03-04T20:36:57.899603Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 17v2 because it doesn't exist in this World.
+2023-03-04T20:36:57.899658Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 18v2 because it doesn't exist in this World.
+2023-03-04T20:36:57.899706Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 20v2 because it doesn't exist in this World.
+2023-03-04T20:36:57.899753Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 10v3 because it doesn't exist in this World.
+2023-03-04T20:36:57.899799Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 53v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.899845Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 54v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900575Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 55v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900628Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 56v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900679Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 57v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900726Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 58v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900772Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 59v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900818Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 60v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900863Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 61v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900909Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 62v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.900954Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 63v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901000Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 64v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901046Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 65v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901091Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 66v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901136Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 68v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901182Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 69v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901228Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 70v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901282Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 71v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901328Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 72v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901373Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 73v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901418Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 74v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901464Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 75v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901509Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 76v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901555Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 77v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901601Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 78v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901647Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 79v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901692Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 80v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901738Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 81v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901783Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 82v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901829Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 83v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901874Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 84v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901919Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 85v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.901963Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 86v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902009Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 87v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902054Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 88v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902099Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 89v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902145Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 90v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902190Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 91v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902236Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 92v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902281Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 93v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902327Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 94v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902372Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 95v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902418Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 96v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902463Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 97v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902509Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 98v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902554Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 99v0 because it doesn't exist in this World.
+2023-03-04T20:36:57.902599Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 100v0 because it doesn't exist in this World.
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+0.75
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2023-03-04T20:37:03.350119Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 131v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.350195Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 52v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350235Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 51v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350272Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 50v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350308Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 49v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350343Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 48v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350379Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 47v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350413Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 46v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350448Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 45v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350483Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 44v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350518Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 43v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350553Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 42v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350587Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 41v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350623Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 40v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350659Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 39v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350694Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 38v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350729Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 37v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350765Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 36v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350801Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 34v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350837Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 33v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350873Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 32v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350909Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 31v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350943Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 30v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.350978Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 29v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.351013Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 8v4 because it doesn't exist in this World.
+2023-03-04T20:37:03.351048Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 16v3 because it doesn't exist in this World.
+2023-03-04T20:37:03.351083Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 15v3 because it doesn't exist in this World.
+2023-03-04T20:37:03.351119Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 14v3 because it doesn't exist in this World.
+2023-03-04T20:37:03.351154Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 13v3 because it doesn't exist in this World.
+2023-03-04T20:37:03.351189Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 12v3 because it doesn't exist in this World.
+2023-03-04T20:37:03.351225Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 6v5 because it doesn't exist in this World.
+2023-03-04T20:37:03.351260Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 11v3 because it doesn't exist in this World.
+2023-03-04T20:37:03.351295Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 35v1 because it doesn't exist in this World.
+2023-03-04T20:37:03.351330Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 101v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351365Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 102v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351400Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 103v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351436Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 104v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351471Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 105v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351509Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 106v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351544Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 107v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351579Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 108v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351614Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 109v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351649Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 110v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351685Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 111v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351720Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 112v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351755Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 113v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351790Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 114v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351825Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 115v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351859Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 116v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351895Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 117v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351930Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 118v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351965Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 119v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.351999Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 120v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352034Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 121v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352069Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 122v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352105Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 123v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352140Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 124v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352175Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 125v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352210Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 126v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352245Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 127v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352280Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 128v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352315Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 129v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352350Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 130v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352399Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 132v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352434Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 133v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352469Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 134v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352504Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 135v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352539Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 136v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352574Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 137v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352609Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 138v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352643Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 139v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352678Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 140v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352713Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 141v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352748Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 142v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352784Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 143v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352819Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 144v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352854Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 145v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352888Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 146v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352923Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 147v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352958Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 148v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.352993Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 149v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353028Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 150v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353063Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 151v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353098Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 152v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353132Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 153v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353167Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 154v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353202Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 155v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353237Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 156v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353272Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 157v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353307Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 158v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353342Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 159v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353377Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 160v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353413Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 161v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353448Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 162v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353484Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 163v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353519Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 164v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353553Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 165v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353588Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 166v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353623Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 167v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353657Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 168v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353693Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 169v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353728Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 170v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353762Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 171v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353797Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 172v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353833Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 173v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353867Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 174v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353902Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 175v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353937Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 176v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.353971Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 177v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354006Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 178v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354041Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 179v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354076Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 180v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354111Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 181v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354146Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 182v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354181Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 183v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354216Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 184v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354251Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 185v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354286Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 186v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354321Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 187v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354356Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 188v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354391Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 189v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354426Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 190v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354461Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 191v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354496Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 192v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354531Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 193v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354566Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 194v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354601Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 195v0 because it doesn't exist in this World.
+2023-03-04T20:37:03.354636Z  WARN bevy_ecs::world: error[B0003]: Could not despawn entity 196v0 because it doesn't exist in this World.

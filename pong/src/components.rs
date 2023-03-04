@@ -25,6 +25,10 @@ pub struct BallVelocity{
     pub x: f32,
     pub y: f32,
 }
+#[derive(Component)]
+pub struct SpeedUp{
+    pub speed: f32
+}
 
 
 
