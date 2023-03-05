@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::{WindowSize, PLAYER_SIZE, components::{SpriteSize, Player, Velocity2, Movement}, WHITE, MAX_SPEED};
+use crate::{WindowSize, PLAYER_SIZE, components::{SpriteSize, Player, Velocity2, Movement}, WHITE, PLAYER_SPEED};
 
 pub struct PlayerPlugin2;
 
@@ -36,16 +36,16 @@ fn player_control(keyboard: Res<Input<KeyCode>>, mut query: Query<(&mut Velocity
         let translation = &transform.translation;
         velocity.y = 
         if keyboard.pressed(KeyCode::Up) {
-            if translation.y+75. < 350. {
-                MAX_SPEED
+            if translation.y+85. < 350. {
+                PLAYER_SPEED
             }
             else{
                 0.
             }
         } 
         else if keyboard.pressed(KeyCode::Down) {
-            if translation.y-75. > -350. {
-                -MAX_SPEED
+            if translation.y-85. > -350. {
+                -PLAYER_SPEED
             }
             else{
                 0.

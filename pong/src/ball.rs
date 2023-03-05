@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::{components::{Ball, SpriteSize, BallVelocity, Movement, SpeedUp}, BALL_SIZE, WHITE, movement};
+use crate::{components::{Ball, SpriteSize, BallVelocity, Movement, SpeedUp}, BALL_SIZE, WHITE, movement, INITAL_SPEED};
 
 pub struct BallPlugin;
 
@@ -22,7 +22,7 @@ fn ball_spawn(mut commands: Commands){
     })
     .insert(SpriteSize::from(BALL_SIZE))
     .insert(Movement {auto_despawn: true})
-    .insert(SpeedUp{speed: 0.5})
+    .insert(SpeedUp{speed: INITAL_SPEED})
     .insert(Ball)
     .insert(BallVelocity {x: -5., y: 0.});
 }
