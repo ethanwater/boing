@@ -2,6 +2,7 @@
 use std::f32::consts::PI;
 use ball::BallPlugin;
 use bevy::{prelude::*, ecs::system::Command, math::Vec3Swizzles, sprite::collide_aabb::collide};
+// use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use border::BorderPlugin;
 use components::{SpriteSize, Ball, Velocity, BallVelocity, Movement, Player, Border, SpeedUp};
 use player::PlayerPlugin;
@@ -17,8 +18,8 @@ const BALL_SIZE: (f32, f32) = (20., 20.);
 const BLACK: (f32, f32, f32) = (0.,0.,0.);
 const WHITE: (f32, f32, f32) = (255.,255.,255.);
 const MAX_BOUNCE_ANGLE: f32 = (5.*PI)/18.;
-const PLAYER_SPEED: f32 = 10.;
-const MAX_SPEED: f32 = 100.;
+const PLAYER_SPEED: f32 = 12.;
+const MAX_SPEED: f32 = 20.;
 const INITAL_SPEED: f32 = 3.;
 #[derive(Resource)]
 pub struct WindowSize {
@@ -38,6 +39,8 @@ fn main() {
         },
         ..Default::default()
     }))
+    // .add_plugin(LogDiagnosticsPlugin::default())
+    // .add_plugin(FrameTimeDiagnosticsPlugin::default())
     .add_startup_system(setup)
     .add_plugin(PlayerPlugin)
     .add_plugin(PlayerPlugin2)
@@ -59,12 +62,13 @@ fn setup(mut commands: Commands, mut window: ResMut<Windows>) {
 } 
 
 fn movement(
-    mut commands: Commands, 
+    mut commands: Commands,
     win_size: Res<WindowSize>,
-    mut query: Query<(Entity, &mut BallVelocity, &mut Transform, &Movement)>
+    mut query: Query<(Entity, &mut BallVelocity, &mut Transform, &Movement, &mut SpeedUp)>
 ) {
-    for (entity, mut velocity, mut transform, movement) in query.iter_mut(){
+    for (entity, mut velocity, mut transform, movement, mut speedup) in query.iter_mut(){
         let translation = &mut transform.translation;
+        let speedup = &mut speedup.speed;
         translation.y += velocity.y;
         translation.x += velocity.x;
 
@@ -89,40 +93,22 @@ fn movement(
             //     .insert(BallVelocity {x: 5., y: 0.});
 
             if translation.x >= 700.{
-                commands.entity(entity).despawn();
-                //CROWDED DESPAWN GLITCH CODE NEEDS FIX!
+                translation.y = 0.;
+                translation.x =0.;
+                velocity.y = 0.;
+                velocity.x = 5.;
+                *speedup = INITAL_SPEED;
+                // commands.entity(entity).despawn();
                 
-                // commands.spawn(SpriteBundle {
-                //     sprite: Sprite { 
-                //         color: Color::rgb(WHITE.0,WHITE.1,WHITE.2),
-                //         custom_size: Some(Vec2::new(BALL_SIZE.0, BALL_SIZE.1)),
-                //         ..Default::default()
-                //     },
-                //     ..Default::default()
-                // })
-                // .insert(SpriteSize::from(BALL_SIZE))
-                // .insert(Movement {auto_despawn: true})
-                // .insert(SpeedUp{speed: INITAL_SPEED})
-                // .insert(Ball)
-                // .insert(BallVelocity {x: 5., y: 0.});
             }
             if translation.x <= -700.{
-                commands.entity(entity).despawn();
-                //CROWDED DESPAWN GLITCH CODE NEEDS FIX!
+                // commands.entity(entity).despawn();
                 
-                // commands.spawn(SpriteBundle {
-                //     sprite: Sprite { 
-                //         color: Color::rgb(WHITE.0,WHITE.1,WHITE.2),
-                //         custom_size: Some(Vec2::new(BALL_SIZE.0, BALL_SIZE.1)),
-                //         ..Default::default()
-                //     },
-                //     ..Default::default()
-                // })
-                // .insert(SpriteSize::from(BALL_SIZE))
-                // .insert(Movement {auto_despawn: true})
-                // .insert(SpeedUp{speed: INITAL_SPEED})
-                // .insert(Ball)
-                // .insert(BallVelocity {x: -5., y: 0.});
+                translation.y = 0.;
+                translation.x =0.;
+                velocity.y =0.;
+                velocity.x = -5.;
+                *speedup = INITAL_SPEED;
             }
             if translation.y <= -345. {
                 velocity.x *2.;
@@ -169,23 +155,25 @@ fn ball_collision_system(
             if let Some(_) = collision {
                 if *speedup >= MAX_SPEED {
                     *speedup * 1.;
-                    println!("{}", speedup);
+                    // println!("{}", speedup);
                 }
                 else{
                     *speedup += 0.25;
-                    println!("{}", speedup);
+                    // println!("{}", speedup);
                 }
                 if velocity.x <= 0.{
                     velocity.y = 5. * bounce_angle.sin();
                     velocity.x = 5. + (*speedup * bounce_angle.cos());
                     translation.y += velocity.y;
                     translation.x += velocity.x;
+                    println!("{}", speedup);
                 }
                 else if velocity.x >= 0.{
                     velocity.y = 5. *- bounce_angle.sin();
                     velocity.x = -5. + ((*speedup*-1.) * bounce_angle.cos());
                     translation.y += velocity.y;
                     translation.x += velocity.x;
+                    println!("{}", speedup);
                 }
             }
         }
