@@ -29,7 +29,10 @@ pub struct BallVelocity{
 pub struct SpeedUp{
     pub speed: f32
 }
-
+#[derive(Component)]
+pub struct Movement {
+    pub auto_despawn: bool,
+}
 
 
 //Sprite Size
@@ -43,6 +46,11 @@ impl From<(f32, f32)> for SpriteSize {
 }
 
 #[derive(Component)]
-pub struct Movement {
-    pub auto_despawn: bool,
+pub struct Score1 {
+    pub score: usize,
+}
+
+#[derive(Component)]
+pub struct Score2 {
+    pub score: usize,
 }

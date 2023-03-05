@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{components::{Border, SpriteSize}, BLACK, WHITE};
+use crate::{components::{Border, SpriteSize}};
 
 pub struct BorderPlugin;
 
@@ -16,7 +16,7 @@ fn border_spawn(mut commands: Commands){
     //TOP BORDER
     commands.spawn(SpriteBundle {
         sprite: Sprite { 
-            color: Color::rgb(WHITE.0,WHITE.1,WHITE.2),
+            color: Color::WHITE,
             custom_size: Some(Vec2::new(1400., 20.)),
             ..Default::default()
         },
@@ -30,12 +30,25 @@ fn border_spawn(mut commands: Commands){
     .insert(Border);
     commands.spawn(SpriteBundle {
         sprite: Sprite { 
-            color: Color::rgb(WHITE.0,WHITE.1,WHITE.2),
+            color: Color::WHITE,
             custom_size: Some(Vec2::new(1400., 20.)),
             ..Default::default()
         },
         transform: Transform {
             translation: Vec3::new(0., -350., 10.),
+            ..Default::default()
+        },
+        ..Default::default()
+    })
+    .insert(Border);
+    commands.spawn(SpriteBundle {
+        sprite: Sprite { 
+            color: Color::DARK_GRAY,
+            custom_size: Some(Vec2::new(20., 700.)),
+            ..Default::default()
+        },
+        transform: Transform {
+            translation: Vec3::new(0., 0., 5.),
             ..Default::default()
         },
         ..Default::default()

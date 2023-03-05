@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::{components::{Ball, SpriteSize, BallVelocity, Movement, SpeedUp}, BALL_SIZE, WHITE, movement, INITAL_SPEED};
+use crate::{components::{Ball, SpriteSize, BallVelocity, Movement, SpeedUp}, BALL_SIZE, movement, INITAL_SPEED};
 
 pub struct BallPlugin;
 
@@ -14,8 +14,12 @@ impl Plugin for BallPlugin{
 fn ball_spawn(mut commands: Commands){
     commands.spawn(SpriteBundle {
         sprite: Sprite { 
-            color: Color::rgb(WHITE.0,WHITE.1,WHITE.2),
+            color: Color::WHITE,
             custom_size: Some(Vec2::new(BALL_SIZE.0, BALL_SIZE.1)),
+            ..Default::default()
+        },
+        transform: Transform {
+            translation: Vec3::new(0., 0., 10.),
             ..Default::default()
         },
         ..Default::default()

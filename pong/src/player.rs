@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::{WindowSize, PLAYER_SIZE, components::{Player, Velocity, SpriteSize, Movement}, WHITE, PLAYER_SPEED};
+use crate::{PLAYER_SIZE, components::{Player, Velocity, SpriteSize, Movement}, PLAYER_SPEED};
 
 pub struct PlayerPlugin;
 
@@ -15,7 +15,7 @@ impl Plugin for PlayerPlugin{
 fn player_spawn(mut commands: Commands){
     commands.spawn(SpriteBundle {
         sprite: Sprite { 
-            color: Color::rgb(WHITE.0,WHITE.1,WHITE.2),
+            color: Color::WHITE,
             custom_size: Some(Vec2::new(PLAYER_SIZE.0, PLAYER_SIZE.1)),
             ..Default::default()
         },
