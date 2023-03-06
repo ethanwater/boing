@@ -5,18 +5,17 @@ use bevy::{
     sprite::collide_aabb::collide,
 };
 use std::f32::consts::PI;
-// use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use border::BorderPlugin;
 use components::{
-    Ball, BallMovement, BallVelocity, Player, SpeedUp, SpriteSize, Velocity, Velocity2,
+    Ball, BallMovement, BallVelocity, Player, PlayerAI, SpeedUp, SpriteSize, Velocity, VelocityAI,
 };
 use player::PlayerPlugin;
-use player2::PlayerPlugin2;
+use ai::AI;
 mod ball;
 mod border;
 mod components;
 mod player;
-mod player2;
+mod ai;
 
 const PLAYER_SIZE: (f32, f32) = (20., 125.);
 const BALL_SIZE: (f32, f32) = (20., 20.);
@@ -54,8 +53,8 @@ fn main() {
         // .add_plugin(LogDiagnosticsPlugin::default())
         // .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(PlayerPlugin)
-        .add_plugin(PlayerPlugin2)
         .add_plugin(BallPlugin)
+        .add_plugin(AI)
         .add_plugin(BorderPlugin)
         .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .insert_resource(Score1 { score: 0 })
@@ -65,7 +64,7 @@ fn main() {
         .add_system_set(
             SystemSet::on_update(AppState::InGame)
                 .with_system(player_control)
-                .with_system(player_control2)
+                .with_system(ai_movement)
                 .with_system(ball_collision_system)
                 .with_system(ball_movement)
                 .with_system(update_score1)
@@ -151,27 +150,36 @@ pub fn player_control(
     }
 }
 
-fn player_control2(
-    keyboard: Res<Input<KeyCode>>,
-    mut query: Query<(&mut Velocity2, &Transform), With<Player>>,
+fn ai_movement(
+    mut commands: Commands, 
+    mut aiquery: Query<(&VelocityAI, &mut Transform), Without<Ball>>, 
+    ballquery: Query<(&Transform), With<Ball>>,
 ) {
-    if let Ok((mut velocity, transform)) = query.get_single_mut() {
-        let translation = &transform.translation;
-        velocity.y = if keyboard.pressed(KeyCode::Up) {
-            if translation.y + 85. < 350. {
-                PLAYER_SPEED
-            } else {
-                0.
+    for (transform) in ballquery.iter(){
+        let trans = &transform.translation;
+        for (velocity, mut transform) in aiquery.iter_mut() {
+            let translation = &mut transform.translation;
+            if trans.x >= 0.{
+                if translation.y + 50. < trans.y{
+                    translation.y += 5.;
+                }
+                else if translation.y - 50.> trans.y{
+                    translation.y -= 5.;
+                }
+                else{
+                    translation.y += 0.;
+                }    
             }
-        } else if keyboard.pressed(KeyCode::Down) {
-            if translation.y - 85. > -350. {
-                -PLAYER_SPEED
-            } else {
-                0.
+            else{
+                if translation.y < -10.{
+                    translation.y += 5.;
+                }
+                else if translation.y > 10.{
+                    translation.y -= 5.;
+                }
             }
-        } else {
-            0.
         }
+
     }
 }
 
@@ -253,7 +261,7 @@ fn ball_collision_system(
                 ball_transform.translation,
                 ball_size.0 * ball_scale + 1.,
                 player_tf.translation,
-                (player_size.0 + 10.) * player_scale,
+                (player_size.0) * player_scale,
             );
 
             let translation = &mut ball_transform.translation;
@@ -267,7 +275,7 @@ fn ball_collision_system(
                 if *speedup >= MAX_SPEED_UP {
                     *speedup * 1.;
                 } else {
-                    *speedup += 1.;
+                    *speedup += 0.5;
                 }
                 if velocity.x <= 0. {
                     velocity.y = 5. * bounce_angle.sin();

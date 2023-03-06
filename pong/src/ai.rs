@@ -1,15 +1,14 @@
 use crate::{
-    components::{BallMovement, Player, SpriteSize, Velocity2},
+    components::{BallMovement, PlayerAI, SpriteSize, VelocityAI},
     PLAYER_SIZE, PLAYER_SPEED,
 };
 use bevy::prelude::*;
 
-pub struct PlayerPlugin2;
+pub struct AI;
 
-impl Plugin for PlayerPlugin2 {
+impl Plugin for AI {
     fn build(&self, app: &mut App) {
-        app.add_startup_system_to_stage(StartupStage::PostStartup, player_spawn)
-            .add_system(player_movement);
+        app.add_startup_system_to_stage(StartupStage::PostStartup, player_spawn);
     }
 }
 
@@ -31,13 +30,6 @@ fn player_spawn(mut commands: Commands) {
         .insert(BallMovement {
             auto_despawn: false,
         })
-        .insert(Player)
-        .insert(Velocity2 { y: 0. });
-}
-
-fn player_movement(mut query: Query<(&Velocity2, &mut Transform), With<Player>>) {
-    for (velocity, mut transform) in query.iter_mut() {
-        let translation = &mut transform.translation;
-        translation.y += velocity.y;
-    }
+        .insert(PlayerAI)
+        .insert(VelocityAI { y: 0. });
 }

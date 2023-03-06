@@ -12,7 +12,7 @@ pub struct Velocity {
 }
 
 #[derive(Component)]
-pub struct Velocity2 {
+pub struct VelocityAI {
     pub y: f32,
 }
 
@@ -52,3 +52,6 @@ pub struct Score1 {
 pub struct Score2 {
     pub score: usize,
 }
+
+#[derive(Component)]
+pub struct PlayerAI;
