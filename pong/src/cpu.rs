@@ -1,12 +1,12 @@
 use crate::{
-    components::{BallMovement, PlayerAI, SpriteSize, VelocityAI},
+    components::{BallMovement, PlayerCPU, ReactionBarrier, SpriteSize, VelocityAI},
     PLAYER_SIZE, PLAYER_SPEED,
 };
 use bevy::prelude::*;
 
-pub struct AI;
+pub struct CPU;
 
-impl Plugin for AI {
+impl Plugin for CPU {
     fn build(&self, app: &mut App) {
         app.add_startup_system_to_stage(StartupStage::PostStartup, player_spawn);
     }
@@ -30,6 +30,7 @@ fn player_spawn(mut commands: Commands) {
         .insert(BallMovement {
             auto_despawn: false,
         })
-        .insert(PlayerAI)
-        .insert(VelocityAI { y: 0. });
+        .insert(PlayerCPU)
+        .insert(VelocityAI { y: 6. })
+        .insert(ReactionBarrier { x: 0. });
 }

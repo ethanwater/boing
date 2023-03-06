@@ -12,8 +12,14 @@ pub struct Velocity {
 }
 
 #[derive(Component)]
+pub struct PlayerCPU;
+#[derive(Component)]
 pub struct VelocityAI {
     pub y: f32,
+}
+#[derive(Component)]
+pub struct ReactionBarrier {
+    pub x: f32,
 }
 
 //Ball
@@ -52,6 +58,3 @@ pub struct Score1 {
 pub struct Score2 {
     pub score: usize,
 }
-
-#[derive(Component)]
-pub struct PlayerAI;
