@@ -1,5 +1,5 @@
 #![allow(unused)]
-use ball::BallPlugin;
+use clap::Parser;
 use bevy::{
     app::AppExit,
     ecs::system::Command,
@@ -8,11 +8,12 @@ use bevy::{
     prelude::*,
     sprite::collide_aabb::{self, collide},
 };
-use border::BorderPlugin;
 use components::{
     Ball, BallMovement, BallVelocity, Player, PlayerCPU, ReactionBarrier, SpeedUp, SpriteSize,
     Velocity, Velocity2, VelocityAI,
 };
+use border::BorderPlugin;
+use ball::BallPlugin;
 use cpu::CPU;
 use player::PlayerPlugin;
 use player2::PlayerPlugin2;
@@ -32,6 +33,12 @@ const INITIAL_CPU_SPEED: f32 = 5.;
 const MAX_SPEED_UP: f32 = 17.;
 const INITAL_SPEED: f32 = 5.;
 
+#[derive(Parser, Default, Debug)]
+#[clap(author="angelshatepop", version, about="pong")]
+struct Args {
+    choice: u32,
+}
+
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 enum AppState {
     Menu,
@@ -49,6 +56,20 @@ struct Score2 {
     score: usize,
 }
 fn main(){
+    let args = Args::parse();
+    start_game(args.choice)
+}
+
+fn start_game(choice: u32){
+    if choice == 1{
+        single_player();
+    }
+    else if choice == 2{
+        two_player();
+    }
+    else{
+        panic!("{} is not an option, can only be:\n1 (SinglepPlayer)\n2 (TwoPlayer", choice);
+    }
 }
 
 fn single_player() {
