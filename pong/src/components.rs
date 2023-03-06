@@ -10,10 +10,20 @@ pub struct Player;
 pub struct Velocity {
     pub y: f32,
 }
-
 #[derive(Component)]
 pub struct Velocity2 {
     pub y: f32,
+}
+
+#[derive(Component)]
+pub struct PlayerCPU;
+#[derive(Component)]
+pub struct VelocityAI {
+    pub y: f32,
+}
+#[derive(Component)]
+pub struct ReactionBarrier {
+    pub x: f32,
 }
 
 //Ball

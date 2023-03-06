@@ -46,7 +46,7 @@ fn border_spawn(mut commands: Commands) {
         .spawn(SpriteBundle {
             sprite: Sprite {
                 color: Color::DARK_GRAY,
-                custom_size: Some(Vec2::new(20., 700.)),
+                custom_size: Some(Vec2::new(10., 700.)),
                 ..Default::default()
             },
             transform: Transform {
