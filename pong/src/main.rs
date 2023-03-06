@@ -34,7 +34,9 @@ const INITAL_SPEED: f32 = 5.;
 
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 enum AppState {
-    InGame,
+    Menu,
+    InGameTwoPlayer,
+    InGameSinglePlayer,
     Paused,
 }
 #[derive(Resource, Component)]
@@ -46,8 +48,10 @@ struct Score1 {
 struct Score2 {
     score: usize,
 }
+fn main(){
+}
 
-fn main() {
+fn single_player() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             window: WindowDescriptor {
@@ -58,21 +62,20 @@ fn main() {
             },
             ..Default::default()
         }))
+        .add_startup_system(game_setup)
         .add_plugin(PlayerPlugin)
-        .add_plugin(PlayerPlugin2)
         .add_plugin(BallPlugin)
-        // .add_plugin(CPU)
+        .add_plugin(CPU)
         .add_plugin(BorderPlugin)
         .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .insert_resource(Score1 { score: 0 })
         .insert_resource(Score2 { score: 0 })
-        .add_startup_system(setup)
-        .add_state(AppState::InGame)
+        .add_state(AppState::InGameSinglePlayer)
+
         .add_system_set(
-            SystemSet::on_update(AppState::InGame)
+            SystemSet::on_update(AppState::InGameSinglePlayer)
                 .with_system(player_control)
-                .with_system(player_control2)
-                // .with_system(cpu_control)
+                .with_system(cpu_control)
                 .with_system(ball_collision_system)
                 .with_system(ball_movement)
                 .with_system(update_score1)
@@ -80,7 +83,7 @@ fn main() {
                 .with_system(exit_app)
                 .with_system(pause),
         )
-        .add_system_set(SystemSet::on_enter(AppState::Paused).with_system(pause))
+
         .add_system_set(
             SystemSet::on_update(AppState::Paused)
                 .with_system(play)
@@ -89,7 +92,49 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn two_player() {
+    App::new()
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            window: WindowDescriptor {
+                width: 1400.0,
+                height: 700.0,
+                title: "pong".to_string(),
+                ..Default::default()
+            },
+            ..Default::default()
+        }))
+        .add_startup_system(game_setup)
+        .add_plugin(PlayerPlugin)
+        .add_plugin(PlayerPlugin2)
+        .add_plugin(BallPlugin)
+        .add_plugin(BorderPlugin)
+        .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
+        .insert_resource(Score1 { score: 0 })
+        .insert_resource(Score2 { score: 0 })
+        .add_state(AppState::InGameTwoPlayer)
+
+        .add_system_set(
+            SystemSet::on_update(AppState::InGameTwoPlayer)
+                .with_system(player_control)
+                .with_system(player_control2)
+                .with_system(ball_collision_system)
+                .with_system(ball_movement)
+                .with_system(update_score1)
+                .with_system(update_score2)
+                .with_system(exit_app)
+                .with_system(pause),
+        )
+
+        .add_system_set(
+            SystemSet::on_update(AppState::Paused)
+                .with_system(play)
+                .with_system(exit_app),
+        )
+        .run();
+}
+
+
+fn game_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
     commands.spawn((
         TextBundle::from_section(
