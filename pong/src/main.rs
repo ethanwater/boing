@@ -1,5 +1,4 @@
 #![allow(unused)]
-use ball::BallPlugin;
 use bevy::{
     app::AppExit,
     ecs::system::Command,
@@ -8,19 +7,22 @@ use bevy::{
     prelude::*,
     sprite::collide_aabb::{self, collide},
 };
-use border::BorderPlugin;
 use components::{
     Ball, BallMovement, BallVelocity, Player, PlayerCPU, ReactionBarrier, SpeedUp, SpriteSize,
-    Velocity, VelocityAI,
+    Velocity, Velocity2, VelocityAI,
 };
-use cpu::CPU;
+use border::BorderPlugin;
+use ball::BallPlugin;
 use player::PlayerPlugin;
+use player2::PlayerPlugin2;
+use cpu::CPU;
 use std::f32::consts::PI;
 mod ball;
 mod border;
 mod components;
 mod cpu;
 mod player;
+mod player2;
 
 const PLAYER_SIZE: (f32, f32) = (20., 125.);
 const BALL_SIZE: (f32, f32) = (20., 20.);
@@ -56,11 +58,10 @@ fn main() {
             },
             ..Default::default()
         }))
-        // .add_plugin(LogDiagnosticsPlugin::default())
-        // .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_plugin(PlayerPlugin)
+        .add_plugin(PlayerPlugin2)
         .add_plugin(BallPlugin)
-        .add_plugin(CPU)
+        // .add_plugin(CPU)
         .add_plugin(BorderPlugin)
         .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .insert_resource(Score1 { score: 0 })
@@ -70,7 +71,8 @@ fn main() {
         .add_system_set(
             SystemSet::on_update(AppState::InGame)
                 .with_system(player_control)
-                .with_system(cpu_control)
+                .with_system(player_control2)
+                // .with_system(cpu_control)
                 .with_system(ball_collision_system)
                 .with_system(ball_movement)
                 .with_system(update_score1)
@@ -145,6 +147,30 @@ pub fn player_control(
                 0.
             }
         } else if keyboard.pressed(KeyCode::S) {
+            if translation.y - 85. > -350. {
+                -PLAYER_SPEED
+            } else {
+                0.
+            }
+        } else {
+            0.
+        }
+    }
+}
+
+fn player_control2(
+    keyboard: Res<Input<KeyCode>>,
+    mut query: Query<(&mut Velocity2, &Transform), With<Player>>,
+) {
+    if let Ok((mut velocity, transform)) = query.get_single_mut() {
+        let translation = &transform.translation;
+        velocity.y = if keyboard.pressed(KeyCode::Up) {
+            if translation.y + 85. < 350. {
+                PLAYER_SPEED
+            } else {
+                0.
+            }
+        } else if keyboard.pressed(KeyCode::Down) {
             if translation.y - 85. > -350. {
                 -PLAYER_SPEED
             } else {
