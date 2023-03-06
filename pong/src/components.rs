@@ -7,33 +7,31 @@ pub struct Border;
 #[derive(Component)]
 pub struct Player;
 #[derive(Component)]
-pub struct Velocity{
+pub struct Velocity {
     pub y: f32,
 }
 
 #[derive(Component)]
-pub struct Velocity2{
+pub struct Velocity2 {
     pub y: f32,
 }
-
 
 //Ball
 #[derive(Component)]
 pub struct Ball;
 #[derive(Component)]
-pub struct BallVelocity{
+pub struct BallVelocity {
     pub x: f32,
     pub y: f32,
 }
 #[derive(Component)]
-pub struct SpeedUp{
-    pub speed: f32
+pub struct SpeedUp {
+    pub speed: f32,
 }
 #[derive(Component)]
-pub struct Movement {
+pub struct BallMovement {
     pub auto_despawn: bool,
 }
-
 
 //Sprite Size
 #[derive(Component)]
