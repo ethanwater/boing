@@ -1,4 +1,5 @@
 #![allow(unused)]
+use ball::BallPlugin;
 use bevy::{
     app::AppExit,
     ecs::system::Command,
@@ -7,15 +8,14 @@ use bevy::{
     prelude::*,
     sprite::collide_aabb::{self, collide},
 };
+use border::BorderPlugin;
 use components::{
     Ball, BallMovement, BallVelocity, Player, PlayerCPU, ReactionBarrier, SpeedUp, SpriteSize,
     Velocity, Velocity2, VelocityAI,
 };
-use border::BorderPlugin;
-use ball::BallPlugin;
+use cpu::CPU;
 use player::PlayerPlugin;
 use player2::PlayerPlugin2;
-use cpu::CPU;
 use std::f32::consts::PI;
 mod ball;
 mod border;
@@ -138,8 +138,8 @@ pub fn player_control(
     keyboard: Res<Input<KeyCode>>,
     mut query: Query<(&mut Velocity, &Transform), With<Player>>,
 ) {
-    if let Ok((mut player_velocity, transform)) = query.get_single_mut() {
-        let translation = &transform.translation;
+    if let Ok((mut player_velocity, player_transform)) = query.get_single_mut() {
+        let translation = &player_transform.translation;
         player_velocity.y = if keyboard.pressed(KeyCode::W) {
             if translation.y + 85. < 350. {
                 PLAYER_SPEED
@@ -162,8 +162,8 @@ fn player_control2(
     keyboard: Res<Input<KeyCode>>,
     mut query: Query<(&mut Velocity2, &Transform), With<Player>>,
 ) {
-    if let Ok((mut velocity, transform)) = query.get_single_mut() {
-        let translation = &transform.translation;
+    if let Ok((mut velocity, player_transform)) = query.get_single_mut() {
+        let translation = &player_transform.translation;
         velocity.y = if keyboard.pressed(KeyCode::Up) {
             if translation.y + 85. < 350. {
                 PLAYER_SPEED
@@ -187,10 +187,10 @@ fn cpu_control(
     mut aiquery: Query<(&mut VelocityAI, &mut Transform, &mut ReactionBarrier), Without<Ball>>,
     ballquery: Query<(&BallVelocity, &Transform), With<Ball>>,
 ) {
-    for (ball_velocity, transform) in ballquery.iter() {
-        let ball_transform = &transform.translation;
-        for (mut ai_velocity, mut transform, mut reaction_bar) in aiquery.iter_mut() {
-            let translation = &mut transform.translation;
+    for (ball_velocity, ball_tf) in ballquery.iter() {
+        let ball_transform = &ball_tf.translation;
+        for (mut ai_velocity, mut ai_transform, mut reaction_bar) in aiquery.iter_mut() {
+            let translation = &mut ai_transform.translation;
             let reaction_barrier = reaction_bar.x;
             let mut ease = 1.;
             if ball_velocity.x >= 0. {
@@ -241,9 +241,12 @@ fn ball_movement(
         With<Ball>,
     >,
 ) {
-    for (entity, mut ball_velocity, mut transform, ball_movement, mut speedup) in query.iter_mut() {
-        let translation = &mut transform.translation;
+    for (ball_entity, mut ball_velocity, mut ball_transform, ball_movement, mut speedup) in
+        query.iter_mut()
+    {
+        let translation = &mut ball_transform.translation;
         let speedup = &mut speedup.speed;
+
         translation.y += ball_velocity.y;
         translation.x += ball_velocity.x;
 
@@ -310,25 +313,25 @@ fn ball_collision_system(
             let ball_translation = &mut ball_transform.translation;
             let paddle_translation = &player_transform.translation;
             let speedup = &mut speedup.speed;
+
             let relative_intersect_y =
                 (paddle_translation.y + (PLAYER_SIZE.1 / 2.)) - ball_translation.y;
             let normalized_relative_intersection_y = (relative_intersect_y / (PLAYER_SIZE.1 / 2.));
             let bounce_angle = normalized_relative_intersection_y * MAX_BOUNCE_ANGLE;
+
             if let Some(_) = collision {
                 audio.play(asset_server.load("sounds/Tink.ogg"));
                 if *speedup >= MAX_SPEED_UP {
                     *speedup * 1.;
                 } else {
-                    *speedup += 0.5;
+                    *speedup += 0.25;
                 }
                 if ball_translation.x < 0. {
                     if ball_translation.y < paddle_translation.y {
                         ball_velocity.y = ball_velocity.x * bounce_angle.sin();
-                    }
-                    else if ball_translation.y > paddle_translation.y{
+                    } else if ball_translation.y > paddle_translation.y {
                         ball_velocity.y = -ball_velocity.x * bounce_angle.sin();
-                    }
-                    else{
+                    } else {
                         ball_velocity.y = 0.;
                     }
                     ball_velocity.x = 5. + (*speedup * bounce_angle.cos());
@@ -337,11 +340,9 @@ fn ball_collision_system(
                 } else if ball_translation.x > 0. {
                     if ball_translation.y < paddle_translation.y {
                         ball_velocity.y = -ball_velocity.x * bounce_angle.sin();
-                    }
-                    else if ball_translation.y > paddle_translation.y{
+                    } else if ball_translation.y > paddle_translation.y {
                         ball_velocity.y = ball_velocity.x * bounce_angle.sin();
-                    }
-                    else{
+                    } else {
                         ball_velocity.y = 0.;
                     }
                     ball_velocity.x = -5. - (*speedup * bounce_angle.cos());
