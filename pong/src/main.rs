@@ -297,10 +297,10 @@ fn ball_collision_system(
                 }
                 if ball_translation.x < 0. {
                     if ball_translation.y < paddle_translation.y {
-                        ball_velocity.y = -5. * bounce_angle.sin();
+                        ball_velocity.y = ball_velocity.x * bounce_angle.sin();
                     }
                     else if ball_translation.y > paddle_translation.y{
-                        ball_velocity.y = 5. * bounce_angle.sin();
+                        ball_velocity.y = -ball_velocity.x * bounce_angle.sin();
                     }
                     else{
                         ball_velocity.y = 0.;
@@ -310,10 +310,10 @@ fn ball_collision_system(
                     ball_translation.x += ball_velocity.x;
                 } else if ball_translation.x > 0. {
                     if ball_translation.y < paddle_translation.y {
-                        ball_velocity.y = -5. * bounce_angle.sin();
+                        ball_velocity.y = -ball_velocity.x * bounce_angle.sin();
                     }
                     else if ball_translation.y > paddle_translation.y{
-                        ball_velocity.y = 5. * bounce_angle.sin();
+                        ball_velocity.y = ball_velocity.x * bounce_angle.sin();
                     }
                     else{
                         ball_velocity.y = 0.;
