@@ -24,3 +24,5 @@ there are only two gamemodes in the current version:
 ## License
 
 Pong is **open source** and licensed under:
+
+MIT License 2023(https://mit-license.org)
