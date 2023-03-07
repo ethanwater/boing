@@ -6,7 +6,9 @@ an modern implementation of the classic game in Rust using Bevy"0.9.1" and Clap"
 ## How to Install?
 as of now, the only way to install is by this repositories link,
 
-'''cargo install --git https://github.com/angelshatepop/pong'''
+'''
+cargo install --git https://github.com/angelshatepop/pong
+'''
 
 ## How to Play?
 controls:
