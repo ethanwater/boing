@@ -258,14 +258,14 @@ fn cpu_control(
         for (mut ai_velocity, mut ai_transform, mut reaction_bar) in aiquery.iter_mut() {
             let translation = &mut ai_transform.translation;
             let reaction_barrier = reaction_bar.x;
-            let mut ease = 1.;
+            let mut ease = 2.;
             if ball_velocity.x >= 0. {
                 if ball_transform.x >= reaction_barrier {
-                    if translation.y + (ai_velocity.y * 4.) / ease < ball_transform.y {
+                    if (translation.y + (ai_velocity.y * 4.) / ease) < ball_transform.y {
                         translation.y += ai_velocity.y / ease;
                         ease += 0.25;
-                    } else if translation.y - (ai_velocity.y * 4.) / ease > ball_transform.y {
-                        translation.y -= ai_velocity.y;
+                    } else if (translation.y - (ai_velocity.y * 4.) / ease) > ball_transform.y {
+                        translation.y -= ai_velocity.y / ease;
                         ease += 0.25;
                     } else {
                         translation.y += 0.;
@@ -281,11 +281,11 @@ fn cpu_control(
                 }
             }
             if ball_transform.x >= (900. - (ai_velocity.y + 3.)) {
-                if ai_velocity.y < 9. {
-                    ai_velocity.y += 1.;
+                if ai_velocity.y < 18. {
+                    ai_velocity.y += 1.25;
                 }
                 if reaction_bar.x > -700. {
-                    reaction_bar.x -= 50.;
+                    reaction_bar.x -= 70.;
                 }
             }
         }
