@@ -1,12 +1,13 @@
 # Pong
 an modern implementation of the classic game in Rust using Bevy"0.9.1" and Clap"4.1.8"
 
-![alt text](assets/images/display.jpg)
+![alt text](images/display.jpg)
 
 ## How to Install?
 as of now, the only way to install is by this repositories link,
 
-'''cargo install --git https://github.com/angelshatepop/pong'''
+![alt text](images/install.jpg)
+
 
 ## How to Play?
 controls:
