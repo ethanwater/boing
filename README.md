@@ -1,7 +1,7 @@
 # Pong
 an modern implementation of the classic game in Rust using Bevy"0.9.1" and Clap"4.1.8"
 
-![alt text](images/display.jpg)
+![alt text](assets/images/display.jpg)
 
 ## How to Install?
 as of now, the only way to install is by this repositories link,
@@ -21,5 +21,3 @@ there are only two gamemodes in the current version:
 ## License
 
 Pong is **open source** and licensed under:
-
-- MIT license (http://opensource.org/licenses/MIT)
