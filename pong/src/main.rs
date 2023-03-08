@@ -262,10 +262,10 @@ fn cpu_control(
             if ball_velocity.x >= 0. {
                 if ball_transform.x >= reaction_barrier {
                     if (translation.y + (ai_velocity.y * 4.) / ease) < ball_transform.y {
-                        translation.y += ai_velocity.y / ease;
+                        translation.y += ai_velocity.y;
                         ease += 0.25;
                     } else if (translation.y - (ai_velocity.y * 4.) / ease) > ball_transform.y {
-                        translation.y -= ai_velocity.y / ease;
+                        translation.y -= ai_velocity.y;
                         ease += 0.25;
                     } else {
                         translation.y += 0.;
@@ -273,16 +273,16 @@ fn cpu_control(
                 }
             } else if ball_velocity.x < 0. {
                 if translation.y < -30. {
-                    translation.y += ai_velocity.y / ease;
+                    translation.y += ai_velocity.y;
                     ease += 0.25;
                 } else if translation.y > 30. {
-                    translation.y -= ai_velocity.y / ease;
+                    translation.y -= ai_velocity.y;
                     ease += 0.25;
                 }
             }
             if ball_transform.x >= (900. - (ai_velocity.y + 3.)) {
                 if ai_velocity.y < 18. {
-                    ai_velocity.y += 1.25;
+                    ai_velocity.y += 5.;
                 }
                 if reaction_bar.x > -700. {
                     reaction_bar.x -= 70.;
