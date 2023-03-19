@@ -1,4 +1,3 @@
-#![allow(unused)]
 use clap::Parser;
 use bevy::{
     app::AppExit,
@@ -9,7 +8,10 @@ use bevy::{
     sprite::collide_aabb::{self, collide},
 };
 use components::{
-    Ball, BallMovement, BallVelocity, Player, PlayerCPU, ReactionBarrier, SpeedUp, SpriteSize,
+    Ball, BallMovement, BallVelocity, 
+    Player,
+    ReactionBarrier, 
+    SpeedUp, SpriteSize,
     Velocity, Velocity2, VelocityAI,
 };
 use border::BorderPlugin;
@@ -29,7 +31,6 @@ const PLAYER_SIZE: (f32, f32) = (20., 125.);
 const BALL_SIZE: (f32, f32) = (20., 20.);
 const MAX_BOUNCE_ANGLE: f32 = (5. * PI) / 18.;
 const PLAYER_SPEED: f32 = 12.;
-const INITIAL_CPU_SPEED: f32 = 5.;
 const MAX_SPEED_UP: f32 = 17.;
 const INITAL_SPEED: f32 = 5.;
 
@@ -307,7 +308,7 @@ fn ball_movement(
         With<Ball>,
     >,
 ) {
-    for (ball_entity, mut ball_velocity, mut ball_transform, ball_movement, mut speedup) in
+    for (_ball_entity, mut ball_velocity, mut ball_transform, ball_movement, mut speedup) in
         query.iter_mut()
     {
         let translation = &mut ball_transform.translation;

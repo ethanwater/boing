@@ -1,6 +1,6 @@
 use crate::{
     components::{BallMovement, PlayerCPU, ReactionBarrier, SpriteSize, VelocityAI},
-    PLAYER_SIZE, PLAYER_SPEED,
+    PLAYER_SIZE,
 };
 use bevy::prelude::*;
 
