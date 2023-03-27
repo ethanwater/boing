@@ -260,12 +260,13 @@ fn cpu_control(
             let translation = &mut ai_transform.translation;
             let reaction_barrier = reaction_bar.x;
             let mut ease = 0.75;
+            //this cpu is kinda fucking OP
             if ball_velocity.x >= 0. {
                 if ball_transform.x >= reaction_barrier {
-                    if (translation.y + (ai_velocity.y * 4.) / (ease/2.)) < ball_transform.y {
+                    if translation.y < ball_transform.y {
                         translation.y += ai_velocity.y / ease;
                         ease += 0.25;
-                    } else if (translation.y - (ai_velocity.y * 4.) / (ease/2.)) > ball_transform.y {
+                    } else if translation.y > ball_transform.y {
                         translation.y -= ai_velocity.y / ease;
                         ease += 0.75;
                     } else {
@@ -273,10 +274,10 @@ fn cpu_control(
                     }
                 }
             } else if ball_velocity.x < 0. {
-                if translation.y < -30. {
+                if translation.y < -15. {
                     translation.y += ai_velocity.y;
                     ease += 0.25;
-                } else if translation.y > 30. {
+                } else if translation.y > 15. {
                     translation.y -= ai_velocity.y;
                     ease += 0.25;
                 }
