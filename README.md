@@ -1,6 +1,4 @@
 # Pong
-an modern implementation of the classic game in Rust using Bevy"0.9.1" and Clap"4.1.8"
-
 ![alt text](images/display.jpg)
 
 ## How to Install?
