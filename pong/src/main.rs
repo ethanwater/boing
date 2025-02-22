@@ -1,256 +1,126 @@
-use clap::Parser;
 use bevy::{
-    app::AppExit,
-    ecs::system::Command,
-    input::keyboard,
-    math::Vec3Swizzles,
-    prelude::*,
-    sprite::collide_aabb::{self, collide},
+    app::AppExit, ecs::system::Commands, math::{bounding::{Aabb2d, BoundingVolume, IntersectsVolume}, Vec3Swizzles}, prelude::*, transform, utils::dbg
 };
 use components::{
     Ball, BallMovement, BallVelocity, 
     Player,
     ReactionBarrier, 
-    SpeedUp, SpriteSize,
-    Velocity, Velocity2, VelocityAI,
+    SpeedUp, 
+    Velocity, VelocityAI,
 };
 use border::BorderPlugin;
 use ball::BallPlugin;
 use cpu::CPU;
 use player::PlayerPlugin;
-use player2::PlayerPlugin2;
-use std::f32::consts::PI;
 mod ball;
 mod border;
 mod components;
 mod cpu;
 mod player;
-mod player2;
 
 const PLAYER_SIZE: (f32, f32) = (20., 125.);
 const BALL_SIZE: (f32, f32) = (20., 20.);
-const MAX_BOUNCE_ANGLE: f32 = (5. * PI) / 18.;
-const PLAYER_SPEED: f32 = 12.;
-const MAX_SPEED_UP: f32 = 17.;
 const INITAL_SPEED: f32 = 5.;
 
-#[derive(Parser, Default, Debug)]
-#[clap(author="angelshatepop", version, about="pong")]
-struct Args {
-    choice: u32,
-}
 
-#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+
+#[derive(Debug, Clone, Eq, PartialEq, Hash, States)]
 enum AppState {
-    Menu,
-    InGameTwoPlayer,
     InGameSinglePlayer,
     Paused,
 }
-#[derive(Resource, Component)]
+#[derive(Resource, Component, Deref, DerefMut)]
 struct Score1 {
     score: usize,
 }
 
-#[derive(Resource, Component)]
+#[derive(Resource, Component, Deref, DerefMut)]
 struct Score2 {
     score: usize,
 }
-fn main(){
-    let args = Args::parse();
-    start_game(args.choice)
-}
-
-fn start_game(choice: u32){
-    if choice == 1{
-        single_player();
-    }
-    else if choice == 2{
-        two_player();
-    }
-    else{
-        panic!("{} is not an option, can only be:\n1 (SinglepPlayer)\n2 (TwoPlayer", choice);
-    }
-}
-
-fn single_player() {
+fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
-            window: WindowDescriptor {
-                width: 1400.0,
-                height: 700.0,
+            primary_window: Some(Window {
+                resolution: bevy::window::WindowResolution::new(1400., 700.),
                 title: "pong".to_string(),
                 ..Default::default()
-            },
+            }),
             ..Default::default()
         }))
-        .add_startup_system(game_setup)
-        .add_plugin(PlayerPlugin)
-        .add_plugin(BallPlugin)
-        .add_plugin(CPU)
-        .add_plugin(BorderPlugin)
-        .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
+        .add_systems(Startup, game_setup)
+        .add_plugins((PlayerPlugin, BallPlugin, CPU, BorderPlugin))
+        .insert_resource(ClearColor(Color::srgb(0.04, 0.04, 0.04)))
         .insert_resource(Score1 { score: 0 })
         .insert_resource(Score2 { score: 0 })
-        .add_state(AppState::InGameSinglePlayer)
-
-        .add_system_set(
-            SystemSet::on_update(AppState::InGameSinglePlayer)
-                .with_system(player_control)
-                .with_system(cpu_control)
-                .with_system(ball_collision_system)
-                .with_system(ball_movement)
-                .with_system(update_score1)
-                .with_system(update_score2)
-                .with_system(exit_app)
-                .with_system(pause),
-        )
-
-        .add_system_set(
-            SystemSet::on_update(AppState::Paused)
-                .with_system(play)
-                .with_system(exit_app),
-        )
+        .insert_state(AppState::InGameSinglePlayer)
+        .add_systems(Update, (player_control, cpu_control,  ball_movement, exit_app).run_if(in_state(AppState::InGameSinglePlayer)))
+        .add_systems(Update, (play, exit_app).run_if(in_state(AppState::Paused)))
         .run();
 }
-
-fn two_player() {
-    App::new()
-        .add_plugins(DefaultPlugins.set(WindowPlugin {
-            window: WindowDescriptor {
-                width: 1400.0,
-                height: 700.0,
-                title: "pong".to_string(),
-                ..Default::default()
-            },
-            ..Default::default()
-        }))
-        .add_startup_system(game_setup)
-        .add_plugin(PlayerPlugin)
-        .add_plugin(PlayerPlugin2)
-        .add_plugin(BallPlugin)
-        .add_plugin(BorderPlugin)
-        .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
-        .insert_resource(Score1 { score: 0 })
-        .insert_resource(Score2 { score: 0 })
-        .add_state(AppState::InGameTwoPlayer)
-
-        .add_system_set(
-            SystemSet::on_update(AppState::InGameTwoPlayer)
-                .with_system(player_control)
-                .with_system(player_control2)
-                .with_system(ball_collision_system)
-                .with_system(ball_movement)
-                .with_system(update_score1)
-                .with_system(update_score2)
-                .with_system(exit_app)
-                .with_system(pause),
-        )
-
-        .add_system_set(
-            SystemSet::on_update(AppState::Paused)
-                .with_system(play)
-                .with_system(exit_app),
-        )
-        .run();
-}
-
 
 fn game_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle::default());
-    commands.spawn((
-        TextBundle::from_section(
-            "",
-            TextStyle {
-                font: asset_server.load("fonts/PixeloidSansBold-GOjpP.ttf"),
-                font_size: 50.0,
-                color: Color::WHITE,
-            },
-        )
-        .with_style(Style {
-            position_type: PositionType::Absolute,
-            position: UiRect {
-                top: Val::Px(5.0),
-                left: Val::Px(620.0),
-                ..default()
-            },
-            ..default()
-        }),
-        Score1 { score: 0 },
-    ));
-    commands.spawn((
-        TextBundle::from_section(
-            "",
-            TextStyle {
-                font: asset_server.load("fonts/PixeloidSansBold-GOjpP.ttf"),
-                font_size: 50.0,
-                color: Color::WHITE,
-            },
-        )
-        .with_text_alignment(TextAlignment::TOP_CENTER)
-        .with_style(Style {
-            position_type: PositionType::Absolute,
-            position: UiRect {
-                top: Val::Px(5.0),
-                right: Val::Px(616.0),
-                ..default()
-            },
-            ..default()
-        }),
-        Score2 { score: 0 },
-    ));
+    commands.spawn(Camera2d::default());
+    //commands.spawn((
+    //    Text::new(""),
+    //    TextFont {
+    //        font: asset_server.load("fonts/PixeloidSansBold-GOjpP.ttf"),
+    //        font_size: 50.0,
+    //        ..Default::default()
+    //    },
+    //    TextColor(Color::WHITE),
+    //    Node {
+    //        position_type: PositionType::Absolute,
+    //        top: Val::Px(5.0),
+    //        left: Val::Px(620.0),
+    //        ..default()
+    //    },
+    //    Score1 { score: 0 },
+    //));
+    //commands.spawn((
+    //    Text::new(""),
+    //    TextFont {
+    //        font: asset_server.load("/assets/fonts/PixeloidSansBold-GOjpP.ttf"),
+    //        font_size: 50.0,
+    //        ..Default::default()
+    //    },
+    //    TextColor(Color::WHITE),
+    //    Node {
+    //        position_type: PositionType::Absolute,
+    //        top: Val::Px(5.0),
+    //        right: Val::Px(620.0),
+    //        ..default()
+    //    },
+    //    Score2 { score: 0 },
+    //));
 }
 
 pub fn player_control(
-    keyboard: Res<Input<KeyCode>>,
-    mut query: Query<(&mut Velocity, &Transform), With<Player>>,
+    keyboard: Res<ButtonInput<KeyCode>>,
+    mut query: Query<(&mut Velocity, &mut Transform), With<Player>>,
 ) {
-    if let Ok((mut player_velocity, player_transform)) = query.get_single_mut() {
-        let translation = &player_transform.translation;
-        player_velocity.y = if keyboard.pressed(KeyCode::W) {
-            if translation.y + 85. < 350. {
-                PLAYER_SPEED
-            } else {
-                0.
+    if let Ok(_) = query.get_single_mut() {
+        if keyboard.pressed(KeyCode::KeyW) {
+            for mut transform in &mut query {
+                if transform.1.translation.y + 8. < 350. - PLAYER_SIZE.1/2. {
+                    transform.0.y = 85.;
+                    transform.1.translation.y += 8.;
+                }
             }
-        } else if keyboard.pressed(KeyCode::S) {
-            if translation.y - 85. > -350. {
-                -PLAYER_SPEED
-            } else {
-                0.
+        }     
+        if keyboard.pressed(KeyCode::KeyS) {
+            for mut transform in &mut query {
+                dbg!(transform.1.scale);
+                if transform.1.translation.y + 8. > -350. + PLAYER_SIZE.1/2. {
+                    transform.0.y = 85.;
+                    transform.1.translation.y -= 8.;
+                }
             }
-        } else {
-            0.
-        }
-    }
-}
-
-fn player_control2(
-    keyboard: Res<Input<KeyCode>>,
-    mut query: Query<(&mut Velocity2, &Transform), With<Player>>,
-) {
-    if let Ok((mut velocity, player_transform)) = query.get_single_mut() {
-        let translation = &player_transform.translation;
-        velocity.y = if keyboard.pressed(KeyCode::Up) {
-            if translation.y + 85. < 350. {
-                PLAYER_SPEED
-            } else {
-                0.
-            }
-        } else if keyboard.pressed(KeyCode::Down) {
-            if translation.y - 85. > -350. {
-                -PLAYER_SPEED
-            } else {
-                0.
-            }
-        } else {
-            0.
-        }
+        }     
     }
 }
 
 fn cpu_control(
-    mut commands: Commands,
     mut aiquery: Query<(&mut VelocityAI, &mut Transform, &mut ReactionBarrier), Without<Ball>>,
     ballquery: Query<(&BallVelocity, &Transform), With<Ball>>,
 ) {
@@ -295,7 +165,6 @@ fn cpu_control(
 }
 
 fn ball_movement(
-    mut commands: Commands,
     mut score: ResMut<Score1>,
     mut score2: ResMut<Score2>,
     mut query: Query<
@@ -349,123 +218,35 @@ fn ball_movement(
     }
 }
 
-fn ball_collision_system(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    audio: Res<Audio>,
-    mut ball_query: Query<
-        (
-            Entity,
-            &mut BallVelocity,
-            &mut Transform,
-            &SpriteSize,
-            &mut SpeedUp,
-        ),
-        With<Ball>,
-    >,
-    player_query: Query<(Entity, &Transform, &SpriteSize), Without<Ball>>,
-) {
-    for (ball_entity, mut ball_velocity, mut ball_transform, ball_size, mut speedup) in
-        ball_query.iter_mut()
-    {
-        for (player_entity, mut player_transform, player_size) in player_query.iter() {
-            let ball_scale = Vec2::from(ball_transform.scale.xy());
-            let player_scale = Vec2::from(player_transform.scale.xy());
-            let collision = collide(
-                ball_transform.translation,
-                ball_size.0 * ball_scale,
-                player_transform.translation,
-                (0., PLAYER_SIZE.1).into(),
-            );
-
-            let ball_translation = &mut ball_transform.translation;
-            let paddle_translation = &player_transform.translation;
-            let speedup = &mut speedup.speed;
-
-            let relative_intersect_y =
-                (paddle_translation.y + (PLAYER_SIZE.1 / 2.)) - ball_translation.y;
-            let normalized_relative_intersection_y = (relative_intersect_y / (PLAYER_SIZE.1 / 2.));
-            let bounce_angle = normalized_relative_intersection_y * MAX_BOUNCE_ANGLE;
-
-            if let Some(_) = collision {
-                audio.play(asset_server.load("sounds/Tink.ogg"));
-                if *speedup >= MAX_SPEED_UP {
-                    *speedup * 1.;
-                } else {
-                    *speedup += 0.25;
-                }
-                if ball_translation.x < 0. {
-                    if ball_translation.y < paddle_translation.y {
-                        ball_velocity.y = ball_velocity.x * bounce_angle.sin();
-                    } else if ball_translation.y > paddle_translation.y {
-                        ball_velocity.y = -ball_velocity.x * bounce_angle.sin();
-                    } else {
-                        ball_velocity.y = 0.;
-                    }
-                    ball_velocity.x = 5. + (*speedup * bounce_angle.cos());
-                    ball_translation.y += ball_velocity.y;
-                    ball_translation.x += ball_velocity.x;
-                } else if ball_translation.x > 0. {
-                    if ball_translation.y < paddle_translation.y {
-                        ball_velocity.y = -ball_velocity.x * bounce_angle.sin();
-                    } else if ball_translation.y > paddle_translation.y {
-                        ball_velocity.y = ball_velocity.x * bounce_angle.sin();
-                    } else {
-                        ball_velocity.y = 0.;
-                    }
-                    ball_velocity.x = -5. - (*speedup * bounce_angle.cos());
-                    ball_translation.y += ball_velocity.y;
-                    ball_translation.x += ball_velocity.x;
-                }
-            }
-        }
-    }
+fn update_score1(score: Res<Score1>, mut score_root: Single<Entity, (With<Score1>, With<Text>)>,  mut writer: TextUiWriter) {
+    *writer.text(*score_root, 1) = score.to_string();
+}
+fn update_score2(score: Res<Score2>, mut score_root: Single<Entity, (With<Score2>, With<Text>)>, mut writer: TextUiWriter) {
+    *writer.text(*score_root, 1) = score.to_string();
 }
 
-fn update_score1(score: Res<Score1>, mut query: Query<&mut Text, With<Score1>>) {
-    let mut text = query.single_mut();
-    text.sections[0].value = score.score.to_string();
-}
-fn update_score2(score: Res<Score2>, mut query: Query<&mut Text, With<Score2>>) {
-    let mut text = query.single_mut();
-    text.sections[0].value = score.score.to_string();
-}
-
-fn play(mut keyboard: ResMut<Input<KeyCode>>, mut app_state: ResMut<State<AppState>>) {
+fn play(mut keyboard: ResMut<ButtonInput<KeyCode>>, mut next_game_state: ResMut<NextState<AppState>>) {
     if keyboard.just_pressed(KeyCode::Space) {
-        app_state.pop().unwrap();
+        next_game_state.set(AppState::InGameSinglePlayer);
         keyboard.reset(KeyCode::Space);
     }
 }
 
 fn pause(
-    mut commands: Commands,
-    mut keyboard: ResMut<Input<KeyCode>>,
-    mut app_state: ResMut<State<AppState>>,
+    mut keyboard: ResMut<ButtonInput<KeyCode>>,
+    mut next_game_state: ResMut<NextState<AppState>>
 ) {
     if keyboard.just_pressed(KeyCode::Space) {
-        app_state.push(AppState::Paused).unwrap();
+        next_game_state.set(AppState::Paused);
         keyboard.reset(KeyCode::Space);
     }
 }
 
 fn exit_app(
-    mut keyboard: ResMut<Input<KeyCode>>,
+    mut keyboard: ResMut<ButtonInput<KeyCode>>,
     mut exit: EventWriter<AppExit>,
-    score1: Res<Score1>,
-    score2: Res<Score2>,
 ) {
     if keyboard.just_pressed(KeyCode::Escape) {
-        exit.send(AppExit);
-
-        let result = if score1.score > score2.score {
-            "Player1 has won!"
-        } else if score1.score == score2.score {
-            "Draw"
-        } else {
-            "Player2 has won!"
-        };
-
-        println!("{}", result);
+        exit.send(AppExit::Success);
     }
 }

@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "skeleton shim",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example",
+                    "skeleton"
+                ]
+            },
+            "args": [
+                "-namespace",
+                "default",
+                "-id",
+                "1234",
+                "-address",
+                "/var/run/containerd/containerd.sock",
+                "-publish-binary",
+                "./bin/containerd",
+            ],
+            "env": {
+                "TTRPC_ADDRESS": "/var/run/containerd/containerd.sock.ttrpc"
+            },
+        }
+    ]
+}

@@ -1,58 +1,45 @@
 use bevy::prelude::*;
-
-use crate::components::{Border};
+use crate::components::Border;
 
 pub struct BorderPlugin;
 
+#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
+pub enum StartupSet {
+    PreStartup,
+    Startup,
+    PostStartup,
+}
+
+
 impl Plugin for BorderPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system_to_stage(StartupStage::PostStartup, border_spawn);
+        app.add_systems(Startup, border_spawn.in_set(StartupSet::PostStartup));
     }
 }
 
 fn border_spawn(mut commands: Commands) {
     //TOP BORDER
-    commands
-        .spawn(SpriteBundle {
-            sprite: Sprite {
-                color: Color::WHITE,
-                custom_size: Some(Vec2::new(1400., 20.)),
-                ..Default::default()
-            },
-            transform: Transform {
-                translation: Vec3::new(0., 350., 10.),
-                ..Default::default()
-            },
-            ..Default::default()
-        })
-        //LOW BORDER
-        .insert(Border);
-    commands
-        .spawn(SpriteBundle {
-            sprite: Sprite {
-                color: Color::WHITE,
-                custom_size: Some(Vec2::new(1400., 20.)),
-                ..Default::default()
-            },
-            transform: Transform {
-                translation: Vec3::new(0., -350., 10.),
-                ..Default::default()
-            },
-            ..Default::default()
-        })
-        .insert(Border);
-    commands
-        .spawn(SpriteBundle {
-            sprite: Sprite {
-                color: Color::DARK_GRAY,
-                custom_size: Some(Vec2::new(10., 700.)),
-                ..Default::default()
-            },
-            transform: Transform {
-                translation: Vec3::new(0., 0., 5.),
-                ..Default::default()
-            },
-            ..Default::default()
-        })
-        .insert(Border);
+    let _ = 
+        commands
+            .spawn((
+                Sprite {
+                    color: Color::WHITE,
+                    custom_size: Some(Vec2::new(1400., 20.)),
+                    ..Default::default()
+                },
+                Transform::from_translation(Vec3::new(0., 350., 10.)),
+            ))
+            .insert(Border);
+    //LOW BORDER
+    let _ = 
+        commands
+            .spawn((
+                Sprite {
+                    color: Color::WHITE,
+                    custom_size: Some(Vec2::new(1400., 20.)),
+                    ..Default::default()
+                },
+                Transform::from_translation(Vec3::new(0., -350., 10.)),
+            ))
+            .insert(Border);
 }
