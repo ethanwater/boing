@@ -4,23 +4,21 @@ use crate::{
 };
 use bevy::prelude::*;
 
-pub struct CPU;
+pub struct CPUPlugin;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
 pub enum StartupSet {
-    PreStartup,
-    Startup,
     PostStartup,
 }
 
 
-impl Plugin for CPU {
+impl Plugin for CPUPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, player_spawn.in_set(StartupSet::PostStartup));
+        app.add_systems(Startup, spawn_cpu.in_set(StartupSet::PostStartup));
     }
 }
 
-fn player_spawn(mut commands: Commands) {
+fn spawn_cpu(mut commands: Commands) {
     let _ = 
         commands
             .spawn((

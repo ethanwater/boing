@@ -5,8 +5,6 @@ pub struct BorderPlugin;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
 pub enum StartupSet {
-    PreStartup,
-    Startup,
     PostStartup,
 }
 

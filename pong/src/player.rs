@@ -7,8 +7,6 @@ use bevy::prelude::*;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
 pub enum StartupSet {
-    PreStartup,
-    Startup,
     PostStartup,
 }
 
@@ -16,11 +14,11 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (player_spawn, player_movement).in_set(StartupSet::PostStartup));
+        app.add_systems(Startup, (spawn_player, dynamic_player_velocity_increment).in_set(StartupSet::PostStartup));
     }
 }
 
-fn player_spawn(mut commands: Commands) {
+fn spawn_player(mut commands: Commands) {
     let _ =
         commands
         .spawn((
@@ -39,7 +37,7 @@ fn player_spawn(mut commands: Commands) {
         .insert(Velocity { y: 0. });
 }
 
-fn player_movement(mut query: Query<(&Velocity, &mut Transform), With<Player>>) {
+fn dynamic_player_velocity_increment(mut query: Query<(&Velocity, &mut Transform), With<Player>>) {
     for (velocity, mut transform) in query.iter_mut() {
         let translation = &mut transform.translation;
         translation.y += velocity.y;

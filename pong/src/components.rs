@@ -10,10 +10,6 @@ pub struct Player;
 pub struct Velocity {
     pub y: f32,
 }
-#[derive(Component)]
-pub struct Velocity2 {
-    pub y: f32,
-}
 
 #[derive(Component)]
 pub struct PlayerCPU;
@@ -53,12 +49,4 @@ impl From<(f32, f32)> for SpriteSize {
     }
 }
 
-#[derive(Component)]
-pub struct Score1 {
-    pub score: usize,
-}
 
-#[derive(Component)]
-pub struct Score2 {
-    pub score: usize,
-}

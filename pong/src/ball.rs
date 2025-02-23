@@ -8,19 +8,17 @@ pub struct BallPlugin;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
 pub enum StartupSet {
-    PreStartup,
-    Startup,
     PostStartup,
 }
 
-
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, ball_spawn.in_set(StartupSet::PostStartup));
+        app.add_systems(Startup, spawn_ball
+        .in_set(StartupSet::PostStartup));
     }
 }
 
-fn ball_spawn(mut commands: Commands) {
+fn spawn_ball(mut commands: Commands) {
     let _ = 
         commands.spawn((
             Sprite {

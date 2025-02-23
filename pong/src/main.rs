@@ -1,3 +1,8 @@
+mod ball;
+mod border;
+mod components;
+mod cpu;
+mod player;
 use bevy::{
     app::AppExit, ecs::system::Commands, math::{bounding::{Aabb2d, BoundingVolume, IntersectsVolume}, Vec3Swizzles}, prelude::*, transform, utils::dbg
 };
@@ -10,19 +15,17 @@ use components::{
 };
 use border::BorderPlugin;
 use ball::BallPlugin;
-use cpu::CPU;
+use cpu::CPUPlugin;
 use player::PlayerPlugin;
-mod ball;
-mod border;
-mod components;
-mod cpu;
-mod player;
 
 const PLAYER_SIZE: (f32, f32) = (20., 125.);
 const BALL_SIZE: (f32, f32) = (20., 20.);
 const INITAL_SPEED: f32 = 5.;
-
-
+const WINDOW_WIDTH: f32 = 1400.;
+const WINDOW_HEIGHT: f32 = 700.;
+const WINDOW_TITLE: &str = "pong";
+const MAX_SPEED_UP: f32 = 17.;
+const MAX_BOUNCE_ANGLE: f32 = (5. * 3.14) / 18.;
 
 #[derive(Debug, Clone, Eq, PartialEq, Hash, States)]
 enum AppState {
@@ -42,21 +45,92 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
-                resolution: bevy::window::WindowResolution::new(1400., 700.),
-                title: "pong".to_string(),
+                resolution: bevy::window::WindowResolution::new(WINDOW_WIDTH, WINDOW_HEIGHT),
+                title: WINDOW_TITLE.to_string(),
                 ..Default::default()
             }),
             ..Default::default()
         }))
         .add_systems(Startup, game_setup)
-        .add_plugins((PlayerPlugin, BallPlugin, CPU, BorderPlugin))
+        .add_plugins((PlayerPlugin, BallPlugin, CPUPlugin, BorderPlugin))
         .insert_resource(ClearColor(Color::srgb(0.04, 0.04, 0.04)))
         .insert_resource(Score1 { score: 0 })
         .insert_resource(Score2 { score: 0 })
         .insert_state(AppState::InGameSinglePlayer)
-        .add_systems(Update, (player_control, cpu_control,  ball_movement, exit_app).run_if(in_state(AppState::InGameSinglePlayer)))
+        .add_systems(Update, (player_control, cpu_control, collision_system, ball_movement, exit_app).run_if(in_state(AppState::InGameSinglePlayer)))
         .add_systems(Update, (play, exit_app).run_if(in_state(AppState::Paused)))
         .run();
+}
+
+//use this for reference: https://bevyengine.org/examples/games/breakout/
+fn collision_system(
+    mut commands: Commands,
+    mut ball_query: Query<(
+        Entity,
+        &mut BallVelocity,
+        &mut Transform,
+        &mut SpeedUp,
+    ), With<Ball>>,
+    player_query: Query<(
+        Entity,
+        &mut Transform
+    ), Without<Ball>>
+) {
+    for (ball_entity, mut ball_velocity, mut ball_transform, mut speedup) in
+        ball_query.iter_mut()
+    {
+        for (player_entity, mut player_transform) in player_query.iter() {
+
+            let ball_scale = Vec2::from(ball_transform.scale.xy());
+            let player_scale = Vec2::from(player_transform.scale.xy());
+            let collision = collide(
+                ball_transform.translation,
+                ball_size.0 * ball_scale,
+                player_transform.translation,
+                (0., PLAYER_SIZE.1).into(),
+            );
+
+            let ball_translation = &mut ball_transform.translation;
+            let paddle_translation = &player_transform.translation;
+            let speedup = &mut speedup.speed;
+
+            let relative_intersect_y =
+                (paddle_translation.y + (PLAYER_SIZE.1 / 2.)) - ball_translation.y;
+            let normalized_relative_intersection_y = (relative_intersect_y / (PLAYER_SIZE.1 / 2.));
+            let bounce_angle = normalized_relative_intersection_y * MAX_BOUNCE_ANGLE;
+
+            if let Some(_) = collision {
+                if *speedup >= MAX_SPEED_UP {
+                    *speedup * 1.;
+                } else {
+                    *speedup += 0.25;
+                }
+                if ball_translation.x < 0. {
+                    if ball_translation.y < paddle_translation.y {
+                        ball_velocity.y = ball_velocity.x * bounce_angle.sin();
+                    } else if ball_translation.y > paddle_translation.y {
+                        ball_velocity.y = -ball_velocity.x * bounce_angle.sin();
+                    } else {
+                        ball_velocity.y = 0.;
+                    }
+                    ball_velocity.x = 5. + (*speedup * bounce_angle.cos());
+                    ball_translation.y += ball_velocity.y;
+                    ball_translation.x += ball_velocity.x;
+                } else if ball_translation.x > 0. {
+                    if ball_translation.y < paddle_translation.y {
+                        ball_velocity.y = -ball_velocity.x * bounce_angle.sin();
+                    } else if ball_translation.y > paddle_translation.y {
+                        ball_velocity.y = ball_velocity.x * bounce_angle.sin();
+                    } else {
+                        ball_velocity.y = 0.;
+                    }
+                    ball_velocity.x = -5. - (*speedup * bounce_angle.cos());
+                    ball_translation.y += ball_velocity.y;
+                    ball_translation.x += ball_velocity.x;
+                }
+            }
+        }
+    }
 }
 
 fn game_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
